@@ -35,72 +35,38 @@ public class App {
 		List<Card> cards2 = new ArrayList<Card>();	
 
 //Instantiate a Deck and two Players, call the shuffle method on the deck.		
-		
 		Deck deck = new Deck();
-		System.out.println("Deck has been created!");	    
-//		deck.describe();
+		System.out.println("\tDeck has been created!");	    
+
 		
 //Instantiate two Players
-		
 		Player player1 = new Player("Tom", 0, cards1 );
 		Player player2 = new Player("Pit", 0, cards2 );
-		int score1 = 0;
-		int score2 = 0;
-
+		
 //Call the shuffle method on the deck.		
 		deck.shuffle();
-		System.out.println("Deck has been shuffled!");		
-//		deck.describe();
+		System.out.println("\tDeck has been shuffled!");		
 		
+		System.out.println("\t--------------------------");		
+		System.out.println("\t GAME " + player1.getName() + "  vs. " + player2.getName() );
+		System.out.println("\t--------------------------");			
 		
-//	b.     Using a traditional for loop, iterate 52 times calling the Draw method on the other player each iteration using the Deck you instantiated.
-		System.out.println("\nCreate Game");
 		int numOfPlayers = 2;
 		Map< String, List<Card> > gameBoard = createGame(numOfPlayers);
 	
 		// Print out each Player and their Hand here.
-		System.out.println("--------------------------");
 		for (int i = 1; i <= numOfPlayers; i++) {
 			String playerName = "Player " + i;
-			System.out.println(playerName + "\n--------");
 			List<Card> playerList = gameBoard.get(playerName);
-			
-//			for (Card handCard : playerList) {
-//				handCard.describe();
-//			}	
-			System.out.println("--------------------------");
 		}	
 		
-//c.      Using a traditional for loop, iterate 26 times and call the flip method for each player.
-//			Compare the value of each card returned by the two player’s flip methods. Call the incrementScore method on the player whose card has the higher value.  Print a message to say which player received a point.
-//			Note:  If the values are equal (it is a tie), print a message saying that no point was awarded.
-//d.      After the loop, compare the final score from each player.
-		System.out.println(gameBoard.size());
-		
-		Set<String> keys = gameBoard.keySet();
-        for (String key : keys) {
-            System.out.println(key);
-        }
-        
 		List<Card> playerList1 = gameBoard.get("Player 1");        
-        System.out.println(playerList1.size());
-        System.out.println(playerList1.get(0).getName() + ":" + playerList1.get(0).getSuit() + ":" + playerList1.get(0).getValue() );
-        
 		List<Card> playerList2 = gameBoard.get("Player 2");        
-        System.out.println(playerList2.size()); 
-        System.out.println(playerList2.get(0).getName() + ":" + playerList2.get(0).getSuit() + ":" + playerList2.get(0).getValue() );
         
         player1.setHand(playerList1);
         player2.setHand(playerList2);
         
-        System.out.println("--------------------------");  
-        System.out.println("player1");         
-        player1.describe();
-        
-        System.out.println("--------------------------");  
-        System.out.println("player2");         
-        player2.describe();        
-        
+        String won_message = "";
         
         for ( int i = 1; i <=26; i++) {
         	
@@ -108,16 +74,41 @@ public class App {
         	Card card2 = player2.flip();
 		        	
 		        if ( card1.getValue() > card2.getValue()) {
-		        	score1 ++;
+		        	player1.setScore(player1.getScore() + 1);
+		        	won_message = player1.getName() + "  won!";
+		        	
 		        }else if ( card1.getValue() < card2.getValue() ){
-		        	score2 ++;
+		        	player2.setScore(player2.getScore() + 1);
+		        	won_message = player2.getName() + "  won!";
+		        }else {
+		        	
+		        	won_message = "Game tied!";
 		        }
 		        
 		        System.out.println("--------------------------"); 
-		        System.out.println(i + ". Player1 card value " + card1.getValue()  + " Player2 card value  " + card2.getValue());
-		        System.out.println(i + ". Running score: " + score1 + " : " + score2); 
+		        System.out.println("Round " + i + ". " + player1.getName() + " got: " + card1.getName() + " " + card1.getValue()  + " ||  " + player2.getName() + " got: " + card1.getName() + "   " + card2.getValue());
+		        System.out.println("Round " + i + ". " + won_message );
+		        System.out.println("Round " + i + ". Running score: " + player1.getScore() + " : " + player2.getScore()); 
         }
         
+        System.out.println(""); 
+        System.out.println(""); 
+        
+        System.out.println("--------------------------"); 
+        System.out.println("-----Game Over------------");
+        
+        if ( player1.getScore() > player2.getScore()) {
+        	won_message = player1.getName() + "  won the game !";
+        	
+        }else if ( player1.getScore() < player2.getScore() ){
+        	won_message = player1.getName() + "  won the game !";
+        }else {
+        	won_message = "Game tied!";
+        }       
+        
+        System.out.println("" + won_message); 
+        System.out.println("--------------------------");         
+    
         
 	} 
 	
@@ -126,7 +117,6 @@ public class App {
 		Map<String, List<Card>> finalGameMap = new HashMap<>();
 		Deck deck = new Deck();
 		deck.shuffle();
-		System.out.println("Deck has " + deck.getCards().size() + " cards!");
 		
 		// Create the entries in the Map with the Player Name and an empty List
 		for (int i = 1; i <= numOfPlayers; i++) {
